@@ -1,0 +1,123 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="cn.z.zai.dao.UserDao">
+
+    <select id="getUserByTgUserId" resultType="cn.z.zai.dto.vo.UserVo">
+        select us.id as id,
+               us.day as day,
+               us.tg_user_id as tgUserId,
+                us.is_bot              isBot,
+               us.user_name           userName,
+               us.first_name          firstName,
+               us.last_name           lastName,
+               us.language_code       languageCode,
+               us.is_active           isActive,
+               us.source as source ,
+               us.address as address,
+               us.lamports as lamports,
+               us.salt as salt,
+               us.verify_code as verifyCode,
+               us.yield_rate as yieldRate,
+               us.invited_friends  as invitedFriends,
+               us.commission as commission,
+               us.superiors_tg_user_id as superiorsTgUserId,
+               us.points_coin pointsCoin,
+               us2.address as superiorsAddress
+        from user us
+            left join user us2
+        on us2.tg_user_id = us.superiors_tg_user_id
+        where us.is_deleted = 0
+          and us.tg_user_id = #{tgUserId}
+    </select>
+
+    <insert id="insert" useGeneratedKeys="true">
+        insert into user
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="day != null">day,</if>
+            <if test="tgUserId != null">tg_user_id,</if>
+            <if test="isBot != null">is_bot,</if>
+            <if test="userName != null">user_name,</if>
+            <if test="firstName != null">first_name,</if>
+            <if test="lastName != null">last_name,</if>
+            <if test="languageCode != null">language_code,</if>
+            <if test="isActive != null">is_active,</if>
+            <if test="source != null">source,</if>
+            <if test="superiorsTgUserId != null">superiors_tg_user_id,</if>
+        </trim>
+        <trim prefix="VALUES (" suffix=")" suffixOverrides=",">
+            <if test="day != null">#{day},</if>
+            <if test="tgUserId != null">#{tgUserId},</if>
+            <if test="isBot != null">#{isBot},</if>
+            <if test="userName != null">#{userName},</if>
+            <if test="firstName != null">#{firstName},</if>
+            <if test="lastName != null">#{lastName},</if>
+            <if test="languageCode != null">#{languageCode},</if>
+            <if test="isActive != null">#{isActive},</if>
+            <if test="source != null">#{source},</if>
+            <if test="superiorsTgUserId != null">#{superiorsTgUserId},</if>
+        </trim>
+    </insert>
+
+    <select id="getTgUserId" resultType="java.math.BigInteger">
+        select tg_user_id tgUserId
+
+        from user
+        where tg_user_id = #{tgUserId} and is_deleted = 0
+    </select>
+
+    <update id="updateUser" useGeneratedKeys="true">
+        update user
+        <set>
+            <if test="isBot != null">
+                is_bot = #{isBot},
+            </if>
+            <if test="userName != null">
+                user_name = #{userName},
+            </if>
+            <if test="firstName != null">
+                first_name = #{firstName},
+            </if>
+            <if test="lastName != null">
+                last_name = #{lastName},
+            </if>
+            <if test="languageCode != null">
+                language_code = #{languageCode},
+            </if>
+            <if test="isActive != null">
+                is_active = #{isActive},
+            </if>
+            <if test="address != null">
+                address = #{address},
+            </if>
+            <if test="lamports != null">
+                lamports = #{lamports},
+            </if>
+            <if test="salt != null">
+                salt = #{salt},
+            </if>
+            <if test="verifyCode != null">
+                verify_code = #{verifyCode},
+            </if>
+            <if test="isExport != null">
+                is_export = #{isExport},
+            </if>
+            <if test="yieldRate != null">
+                yield_rate = #{yieldRate},
+            </if>
+            <if test="incInvitedFriends != null">
+                invited_friends = invited_friends + #{incInvitedFriends},
+            </if>
+
+            <if test="incCommission != null">
+                commission = commission + #{incCommission},
+            </if>
+
+            <if test="pointsCoin != null">
+                points_coin =  #{pointsCoin},
+            </if>
+        </set>
+        where tg_user_id = #{tgUserId} and is_deleted = 0
+    </update>
+
+
+</mapper>

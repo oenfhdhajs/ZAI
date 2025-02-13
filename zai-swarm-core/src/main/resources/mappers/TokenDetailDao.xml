@@ -1,0 +1,164 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="cn.z.zai.dao.TokenDetailDao">
+
+    <resultMap id="VoMap" type="cn.z.zai.dto.vo.TokenDetailVo">
+        <result column="coin_gecko_id"  property="coinGeckoId" />
+        <result column="name" property="name"/>
+        <result column="address" property="address"/>
+        <result column="symbol" property="symbol"/>
+        <result column="image" property="image"/>
+        <result column="mkt_cap" property="mktCap"/>
+        <result column="description" property="description"/>
+        <result column="total_supply" property="totalSupply"/>
+        <result column="decimals" property="decimals"/>
+        <result column="holders" property="holders"/>
+        <result column="deploy_time" property="deployTime"/>
+        <result column="price" property="price"/>
+        <result column="twitter_screen_name" property="twitterScreenName"/>
+        <result column="volume_past_24h" property="volumePast24h"/>
+        <result column="price_24h_change" property="price24hChange"/>
+        <result column="circulating_supply" property="circulatingSupply"/>
+        <result column="category" property="category"/>
+        <result column="last_timestamp" property="lastTimestamp"/>
+        <result column="last_date_time" property="lastDateTime"/>
+        <result column="show_status" property="showStatus"/>
+        <result column="last_show_date_time" property="lastShowDateTime"/>
+        <result column="hidden" property="hidden"/>
+        <result column="manual_editor" property="manualEditor"/>
+        <result column="spotlight_desc" property="spotlightDesc"/>
+    </resultMap>
+
+    <resultMap id="VoWithSecurityMap" type="cn.z.zai.dto.vo.TokenDetailWithSecurityVo" extends="VoMap">
+        <result column="name" property="name"/>
+    </resultMap>
+
+    <insert id="addTokenDetail" useGeneratedKeys="true" keyProperty="id">
+        INSERT INTO token_detail
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="coinGeckoId != null">coin_gecko_id,</if>
+            <if test="name != null">name,</if>
+            <if test="address != null">address,</if>
+            <if test="symbol != null">symbol,</if>
+            <if test="image != null">image,</if>
+            <if test="ossImage != null">oss_image,</if>
+            <if test="ossed != null">ossed,</if>
+            <if test="mktCap != null">mkt_cap,</if>
+            <if test="description != null">description,</if>
+            <if test="totalSupply != null">total_supply,</if>
+            <if test="decimals != null">decimals,</if>
+            <if test="holders != null">holders,</if>
+            <if test="deployTime != null">deploy_time,</if>
+            <if test="price != null">price,</if>
+            <if test="twitterScreenName != null">twitter_screen_name,</if>
+            <if test="volumePast24h != null">volume_past_24h,</if>
+            <if test="price24hChange != null">price_24h_change,</if>
+            <if test="circulatingSupply != null">circulating_supply,</if>
+            <if test="category != null">category,</if>
+            <if test="lastTimestamp != null">last_timestamp,</if>
+            <if test="lastDateTime != null">last_date_time,</if>
+            <if test="showStatus != null">show_status,</if>
+            <if test="lastShowDateTime != null">last_show_date_time,</if>
+            <if test="hidden != null">hidden,</if>
+            <if test="manualEditor != null">manual_editor,</if>
+        </trim>
+        <trim prefix="VALUES (" suffix=")" suffixOverrides=",">
+            <if test="coinGeckoId != null">#{coinGeckoId},</if>
+            <if test="name != null">#{name},</if>
+            <if test="address != null">#{address},</if>
+            <if test="symbol != null">#{symbol},</if>
+            <if test="image != null">#{image},</if>
+            <if test="ossImage != null">#{ossImage},</if>
+            <if test="ossed != null">#{ossed},</if>
+            <if test="mktCap != null">#{mktCap},</if>
+            <if test="description != null">#{description},</if>
+            <if test="totalSupply != null">#{totalSupply},</if>
+            <if test="decimals != null">#{decimals},</if>
+            <if test="holders != null">#{holders},</if>
+            <if test="deployTime != null">#{deployTime},</if>
+            <if test="price != null">#{price},</if>
+            <if test="twitterScreenName != null">#{twitterScreenName},</if>
+            <if test="volumePast24h != null">#{volumePast24h},</if>
+            <if test="price24hChange != null">#{price24hChange},</if>
+            <if test="circulatingSupply != null">#{circulatingSupply},</if>
+            <if test="category != null">#{category},</if>
+            <if test="lastTimestamp != null">#{lastTimestamp},</if>
+            <if test="lastDateTime != null">#{lastDateTime},</if>
+            <if test="showStatus != null">#{showStatus},</if>
+            <if test="lastShowDateTime != null">#{lastShowDateTime},</if>
+            <if test="hidden != null">#{hidden},</if>
+            <if test="manualEditor != null">#{manualEditor},</if>
+        </trim>
+    </insert>
+    <update id="updateTokenDetail">
+        update token_detail
+        <set>
+            <if test="coinGeckoId != null"> coin_gecko_id = #{coinGeckoId},</if>
+            <if test="name != null"> name = #{name},</if>
+            <if test="address != null"> address = #{address},</if>
+            <if test="symbol != null"> symbol = #{symbol},</if>
+            <if test="mktCap != null"> mkt_cap = #{mktCap},</if>
+            <if test="description != null"> description = #{description},</if>
+            <if test="totalSupply != null"> total_supply = #{totalSupply},</if>
+            <if test="decimals != null"> decimals = #{decimals},</if>
+            <if test="holders != null"> holders = #{holders},</if>
+            <if test="price != null"> price = #{price},</if>
+            <if test="volumePast24h != null"> volume_past_24h = #{volumePast24h},</if>
+            <if test="price24hChange != null"> price_24h_change = #{price24hChange},</if>
+            <if test="circulatingSupply != null"> circulating_supply = #{circulatingSupply},</if>
+            <if test="category != null"> category = #{category},</if>
+            <if test="lastTimestamp != null"> last_timestamp = #{lastTimestamp},</if>
+            <if test="lastDateTime != null"> last_date_time = #{lastDateTime},</if>
+            <if test="showStatus != null"> show_status = #{showStatus},</if>
+            <if test="lastShowDateTime != null"> last_show_date_time = #{lastShowDateTime},</if>
+            <if test="hidden != null"> hidden = #{hidden},</if>
+            <if test="manualEditor != null"> manual_editor = #{manualEditor},</if>
+            <if test="manualEditor != null and manualEditor == 0">
+                <if test="image != null"> image = #{image},</if>
+                <if test="ossImage != null"> oss_image = #{ossImage},</if>
+                <if test="ossed != null"> ossed = #{ossed},</if>
+                <if test="twitterScreenName != null"> twitter_screen_name = #{twitterScreenName},</if>
+                <if test="deployTime != null"> deploy_time = #{deployTime},</if>
+            </if>
+        </set>
+        where id = #{id}
+    </update>
+
+    <select id="queryByAddress" resultMap="VoMap">
+        select id,
+               coin_gecko_id,
+               NAME,
+               address,
+               symbol,
+               CASE WHEN oss_image = '' or oss_image = null THEN image ELSE oss_image END AS image,
+               ossed ossed,
+               mkt_cap,
+               description,
+               total_supply,
+               decimals,
+               holders,
+               deploy_time,
+               price,
+               twitter_screen_name,
+               volume_past_24h,
+               price_24h_change,
+               circulating_supply,
+               category,
+               last_timestamp,
+               last_date_time,
+               show_status,
+               last_show_date_time,
+               hidden,
+               manual_editor,
+               spotlight_desc
+        from token_detail
+        where address = #{address} limit 1
+    </select>
+
+
+
+
+
+
+
+</mapper>

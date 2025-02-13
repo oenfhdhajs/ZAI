@@ -1,0 +1,47 @@
+spring:
+  datasource:
+    url: jdbc:mysql://xxxx
+    username: xxx
+    password: xxx
+    hikari:
+      maximum-pool-size: 4
+
+  redis:
+    cluster:
+      nodes:
+        - xxx:xx
+      max-redirects: 3
+kafka:
+  bootstrap-servers: xxxx
+  producer:
+    retries: 3
+    max-block-ms: 6000
+    batch-size: 16384
+    linger-ms: 1
+    buffer-memory: 33554432
+    max-request-size: 1048576
+    key-serializer: org.apache.kafka.common.serialization.StringSerializer
+    value-serializer: org.apache.kafka.common.serialization.StringSerializer
+    partitioner-class: org.apache.kafka.clients.producer.RoundRobinPartitioner
+    acks: 1
+  consumer:
+    auto-commit-interval-ms: 1000
+    session-timeout-ms: 30000
+    auto-offset-reset: latest
+    enable-auto-commit: false
+    key-deserializer: org.apache.kafka.common.serialization.StringDeserializer
+    value-deserializer: org.apache.kafka.common.serialization.StringDeserializer
+    max-poll-records: 30
+    group-id: defaultGroup
+  topic:
+    userAccountTopic: xxx
+    userTokenTopic: xxx
+
+    userTopic: xxx
+
+  group:
+    userAccountGroup: xxx
+    userTokenGroup: xxx
+
+    userGroup: xxx
+

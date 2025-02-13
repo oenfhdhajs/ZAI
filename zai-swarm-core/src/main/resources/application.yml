@@ -1,0 +1,65 @@
+server:
+  servlet:
+    context-path: /${spring.application.name}
+  port: 8080
+  tomcat:
+    max-connections: 10000
+    accept-count: 400
+    threads:
+      max: 400
+spring:
+  application:
+    name: zai-swarm-core
+  profiles:
+    active: ${PROFILE_ACTIVE:@profile.active@}
+
+  datasource:
+    type: com.zaxxer.hikari.HikariDataSource
+    driverClassName: com.mysql.cj.jdbc.Driver
+    hikari:
+      auto-commit: true
+      connection-test-query: SELECT 1
+      connection-timeout: 30000
+      idle-timeout: 30000
+      max-lifetime: 1800000
+      maximum-pool-size: 50
+      minimum-idle: 1
+      initialization-fail-timeout: -1
+      pool-name: FlyduckHikariCP
+
+  redis:
+    timeout: 3000ms
+    lettuce:
+      pool:
+        max-active: 1000
+        max-wait: -1ms
+        max-idle: 10
+        min-idle: 5
+mybatis.mapper-locations: classpath:mappers/*.xml
+mybatis:
+  configuration:
+    log-impl: org.apache.ibatis.logging.nologging.NoLoggingImpl
+tg:
+  bot:
+    env: ${spring.profiles.active}
+
+web:
+  jwt:
+    secret: xxx
+    expire: 604800
+    header: token
+    excludeUrl:
+      - /zai-swarm-core/token/trending/open
+      - /zai-swarm-core/auth/me
+      - /zai-swarm-core/health**
+      - /zai-swarm-core/health-check
+      - /zai-swarm-core/swagger-ui.html
+      - /zai-swarm-core/v2/api-docs
+      - /zai-swarm-core/api/**
+      - /zai-swarm-core/webjars/**
+      - /zai-swarm-core/swagger-resources/**
+      - /zai-swarm-core/auth/verify_number
+
+
+open:
+  apiKey: xxxxxxx

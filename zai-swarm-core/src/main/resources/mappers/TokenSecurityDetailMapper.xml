@@ -1,0 +1,110 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="cn.z.zai.dao.TokenSecurityDetailDao">
+
+    <insert id="addTokenSecurityDetail" useGeneratedKeys="true" keyProperty="id">
+        INSERT INTO token_security_detail
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="address != null">address,</if>
+            <if test="alarm != null">alarm,</if>
+            <if test="contractVerified != null">contract_verified,</if>
+            <if test="honeypot != null">honeypot,</if>
+            <if test="buyTax != null">buy_tax,</if>
+            <if test="sellTax != null">sell_tax,</if>
+            <if test="proxyContract != null">proxy_contract,</if>
+            <if test="mintable != null">mintable,</if>
+            <if test="taxModifiable != null">tax_modifiable,</if>
+            <if test="transferPausable != null">transfer_pausable,</if>
+            <if test="blacklisted != null">blacklisted,</if>
+            <if test="scamRisk != null">scam_risk,</if>
+            <if test="retrieveOwnership != null">retrieve_ownership,</if>
+            <if test="balanceModifiable != null">balance_modifiable,</if>
+            <if test="hiddenOwner != null">hidden_owner,</if>
+            <if test="selfdestruct != null">selfdestruct,</if>
+            <if test="externalCallRisk != null">external_call_risk,</if>
+            <if test="buyAvailable != null">buy_available,</if>
+            <if test="maxSellRatio != null">max_sell_ratio,</if>
+            <if test="whitelisted != null">whitelisted,</if>
+            <if test="antiwhale != null">antiwhale,</if>
+            <if test="antiwhaleModifiable != null">antiwhale_modifiable,</if>
+            <if test="tradingCooldown != null">trading_cooldown,</if>
+            <if test="personalTaxModifiable != null">personal_tax_modifiable,</if>
+            <if test="realFakeToken != null">real_fake_token,</if>
+            <if test="airdropScam != null">airdrop_scam,</if>
+            <if test="canBeTrusted != null">can_be_trusted,</if>
+            <if test="ownerAddress != null">owner_address,</if>
+            <if test="ownerBalance != null">owner_balance,</if>
+            <if test="ownerPercent != null">owner_percent,</if>
+            <if test="creatorAddress != null">creator_address,</if>
+            <if test="creatorBalance != null">creator_balance,</if>
+            <if test="creatorPercent != null">creator_percent,</if>
+            <if test="pairHolders != null">pair_holders,</if>
+            <if test="otherRisks != null">otherRisks,</if>
+            <if test="note != null">note,</if>
+            <if test="hasScams != null">has_scams,</if>
+            <if test="transferTax != null">transfer_tax,</if>
+            <if test="lpBurnedPercent != null">lp_burned_percent,</if>
+            <if test="contractRenounced != null">contract_renounced,</if>
+            <if test="canFreezeTrading != null">can_freeze_trading,</if>
+            <if test="mutable != null">mutable,</if>
+            <if test="authorities != null">authorities,</if>
+            <if test="top10HolderPercent != null">top10_holder_percent,</if>
+
+
+
+        </trim>
+        <trim prefix="VALUES (" suffix=")" suffixOverrides=",">
+            <if test="address != null">#{address},</if>
+            <if test="alarm != null">#{alarm},</if>
+            <if test="contractVerified != null">#{contractVerified},</if>
+            <if test="honeypot != null">#{honeypot},</if>
+            <if test="buyTax != null">#{buyTax},</if>
+            <if test="sellTax != null">#{sellTax},</if>
+            <if test="proxyContract != null">#{proxyContract},</if>
+            <if test="mintable != null">#{mintable},</if>
+            <if test="taxModifiable != null">#{taxModifiable},</if>
+            <if test="transferPausable != null">#{transferPausable},</if>
+            <if test="blacklisted != null">#{blacklisted},</if>
+            <if test="scamRisk != null">#{scamRisk},</if>
+            <if test="retrieveOwnership != null">#{retrieveOwnership},</if>
+            <if test="balanceModifiable != null">#{balanceModifiable},</if>
+            <if test="hiddenOwner != null">#{hiddenOwner},</if>
+            <if test="selfdestruct != null">#{selfdestruct},</if>
+            <if test="externalCallRisk != null">#{externalCallRisk},</if>
+            <if test="buyAvailable != null">#{buyAvailable},</if>
+            <if test="maxSellRatio != null">#{maxSellRatio},</if>
+            <if test="whitelisted != null">#{whitelisted},</if>
+            <if test="antiwhale != null">#{antiwhale},</if>
+            <if test="antiwhaleModifiable != null">#{antiwhaleModifiable},</if>
+            <if test="tradingCooldown != null">#{tradingCooldown},</if>
+            <if test="personalTaxModifiable != null">#{personalTaxModifiable},</if>
+            <if test="realFakeToken != null">#{realFakeToken},</if>
+            <if test="airdropScam != null">#{airdropScam},</if>
+            <if test="canBeTrusted != null">#{canBeTrusted},</if>
+            <if test="ownerAddress != null">#{ownerAddress},</if>
+            <if test="ownerBalance != null">#{ownerBalance},</if>
+            <if test="ownerPercent != null">#{ownerPercent},</if>
+            <if test="creatorAddress != null">#{creatorAddress},</if>
+            <if test="creatorBalance != null">#{creatorBalance},</if>
+            <if test="creatorPercent != null">#{creatorPercent},</if>
+            <if test="pairHolders != null">#{pairHolders},</if>
+            <if test="otherRisks != null">#{otherRisks},</if>
+            <if test="note != null">#{note},</if>
+            <if test="hasScams != null">#{hasScams},</if>
+            <if test="transferTax != null">#{transferTax},</if>
+            <if test="lpBurnedPercent != null">#{lpBurnedPercent},</if>
+            <if test="contractRenounced != null">#{contractRenounced},</if>
+            <if test="canFreezeTrading != null">#{canFreezeTrading},</if>
+            <if test="mutable != null">#{mutable},</if>
+            <if test="authorities != null">#{authorities},</if>
+            <if test="top10HolderPercent != null">#{top10HolderPercent},</if>
+        </trim>
+    </insert>
+
+
+    <select id="getTokenSecurityDetail" resultType="cn.z.zai.dto.entity.TokenSecurityDetail">
+        select id, address, alarm
+        from token_security_detail
+        where address = #{tokenAddress}
+    </select>
+</mapper>

@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="cn.z.zai.dao.ZAiLineDao">
+
+    <sql id="BaseColumn">
+        day,message_id messageId,tg_user_id tgUserId,platform,model,title,created_time createdTime
+    </sql>
+
+    <insert id="addZAi">
+        insert into z_ai_line (day, tg_user_id, message_id, platform, model, title)
+            value (#{day},#{tgUserId},#{messageId},#{platform},#{model},#{title})
+    </insert>
+
+    <select id="queryByTgUserId" resultType="cn.z.zai.dto.entity.ZAiLine">
+        select
+        <include refid="BaseColumn"/>
+        from z_ai_line
+        where tg_user_id = #{tgUserId} and is_deleted = 0 and day >= CURDATE() - INTERVAL 8 DAY
+        order by created_time desc
+    </select>
+    <select id="existMessageId" resultType="cn.z.zai.dto.entity.ZAiLine">
+        select
+        <include refid="BaseColumn"/>
+        from z_ai_line
+        where message_id = #{messageId} and is_deleted = 0
+    </select>
+
+    <update id="delBuyMessageId">
+
+        update z_ai_line
+        set is_deleted = 1
+        where tg_user_id = #{tgUserId}
+          and message_id = #{messageId}
+
+    </update>
+</mapper>

@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="cn.z.zai.dao.ZAiLineDetailDao">
+    <sql id="BaseColumn">
+       id, tg_user_id tgUserId, message_id messageId,one_quest_id oneQuestId,platform,model,role,type,content,show_content showContent,created_time createdTime
+    </sql>
+
+    <insert id="addZAiDetail">
+        insert into z_ai_line_detail (tg_user_id, message_id,one_quest_id, platform, model, type, role, content,show_content)
+        value (#{tgUserId},#{messageId},#{oneQuestId},#{platform},#{model},#{type},#{role},#{content},#{showContent})
+    </insert>
+    <select id="queryByMessageId" resultType="cn.z.zai.dto.entity.ZAiLineDetail">
+        select <include refid="BaseColumn"/>
+        from z_ai_line_detail
+        where message_id = #{messageId} and is_deleted = 0
+        order by created_time asc
+    </select>
+
+    <select id="queryByOneQuestIdId" resultType="cn.z.zai.dto.entity.ZAiLineDetail">
+        select <include refid="BaseColumn"/>
+        from z_ai_line_detail
+        where one_quest_id = #{oneQuestId} and is_deleted = 0
+        order by created_time asc
+    </select>
+
+
+    <update id="updateTransactionStatus" parameterType="cn.z.zai.dto.entity.ZAiLineDetail">
+        update z_ai_line_detail
+        set show_content = #{showContent}
+        where id = #{id}
+    </update>
+</mapper>

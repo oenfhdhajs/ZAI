@@ -1,0 +1,26 @@
+.html {
+    @apply h-auto overflow-hidden;
+
+    body {
+        @apply min-h-screen overflow-hidden isolate;
+    }
+}
+
+.warp_m {
+    position: absolute;
+    left: 0;
+    top: 0;
+    right: 0;
+    bottom: 0;
+    overflow-x: hidden;
+    overflow-y: auto;
+}
+
+.root_m {
+    height: calc(100% + 1px);
+}
+
+.body_m {
+    height: 100vh;
+    overflow: hidden;
+}

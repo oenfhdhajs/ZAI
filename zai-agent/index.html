@@ -1,0 +1,27 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <link rel="icon" type="image/svg+xml" href="/favicon.ico" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+    <title>ZAI Agent</title>
+    <script type="module">
+      import * as buffer from "buffer";
+      if (typeof window.global === "undefined") {
+        window.global = window;
+      }
+      if (typeof window.Buffer === "undefined") {
+        window.Buffer = buffer.Buffer;
+      }
+    </script>
+    <script>
+      customElements.defineclone = Object.assign(Object.create(Object.getPrototypeOf(customElements)).define, customElements);
+      customElements.define = (name, element) => customElements.get(name) || customElements.defineclone(name, element);
+    </script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
+  </head>
+  <body>
+    <div id="root" style="overflow: auto;height: 100%"></div>
+    <script type="module" src="/src/main.tsx"></script>
+  </body>
+</html>
