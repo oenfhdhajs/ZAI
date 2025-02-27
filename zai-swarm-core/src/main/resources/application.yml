@@ -63,3 +63,5 @@ web:
 
 open:
   apiKey: xxxxxxx
+deepSeek:
+  apiKey: xxxxxxx
