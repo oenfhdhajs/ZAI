@@ -1,0 +1,335 @@
+Let’s take the ZAI World app wallet to the next level by adding an AI-powered agent that users can talk to naturally, handling requests like "ride volatile markets and cash out on highs" or "invest in long-term ICO drops." Since you’ve specified DeepSeek as the AI backend and mentioned a TikTok integration goal, I’ll design this with that in mind, keeping it flexible for the ZAI team to tweak later. We’ll build on our previous work—CryptoWalletVisualizer and BubbleWallet—to create a fully functional wallet with a conversational agent, token management, and blockchain integration. I’ll break it into clear sections with complete code snippets, explanations, and a structure they can adapt.
+Plan Overview
+Goal: A wallet app where users speak to a DeepSeek-powered AI agent to manage ZAI tokens and execute strategies (e.g., volatility trading, ICO investing).
+Features:
+AI Agent: Understands natural language requests and acts on them (e.g., "buy low, sell high" or "find ICOs").
+Token Management: Handles ZAI token operations (send, swap, stake) via smart contracts.
+Wallet Integration: Connects to user wallets (e.g., TON or Ethereum) with TikTok-inspired social login.
+Strategies: Executes volatility trading and ICO investment based on user commands.
+Tech Stack:
+Frontend: React for the UI, with a chat interface.
+Backend: Node.js with DeepSeek API for AI processing.
+Contracts: Solidity for ZAI token and staking (assuming Ethereum compatibility; adjustable for TON).
+DeepSeek: Handles intent recognition and strategy logic.
+Repository Structure
+zaiworld-wallet/
+├── frontend/             # React app with bubble UI and chat
+│   ├── src/
+│   │   ├── components/
+│   │   └── App.js
+├── backend/              # Node.js server with DeepSeek integration
+│   ├── server.js
+│   └── deepseek.js
+├── contracts/            # Solidity smart contracts
+│   ├── ZAIToken.sol
+│   └── ZAIStaking.sol
+└── README.md             # Instructions for setup and use
+1. AI-Powered Agent (Backend)
+This section powers the conversational agent using DeepSeek to interpret user commands and trigger actions.
+backend/deepseek.js
+javascript
+const axios = require('axios');
+require('dotenv').config();
+
+const deepseekApiKey = process.env.DEEPSEEK_API_KEY;
+const deepseekEndpoint = 'https://api.deepseek.com/v1/chat';
+
+async function processCommand(userInput, userContext) {
+  const prompt = `
+    You are an AI agent for the ZAI World wallet. The user says: "${userInput}".
+    User context: ${JSON.stringify(userContext)}.
+    Interpret the intent and suggest actions (e.g., buy, sell, stake, swap, invest).
+    Return a JSON response with:
+    - intent: the user's goal
+    - actions: array of steps to execute
+    - reply: natural language response to the user
+  `;
+
+  const response = await axios.post(deepseekEndpoint, {
+    model: 'deepseek-chat',
+    messages: [{ role: 'user', content: prompt }],
+    api_key: deepseekApiKey,
+  });
+
+  return response.data.choices[0].message.content;
+}
+
+module.exports = { processCommand };
+backend/server.js
+javascript
+const express = require('express');
+const { processCommand } = require('./deepseek.js');
+const ethers = require('ethers'); // For blockchain interactions
+require('dotenv').config();
+
+const app = express();
+app.use(express.json());
+
+const provider = new ethers.JsonRpcProvider('https://mainnet.infura.io/v3/YOUR_INFURA_KEY');
+const wallet = new ethers.Wallet('YOUR_PRIVATE_KEY', provider);
+
+// User context (mock DB)
+const userContext = {
+  user1: { address: '0x123...', balance: { ZAI: 100, ETH: 2 }, preferences: {} },
+};
+
+// Blockchain interaction placeholders
+async function executeTrade(action) {
+  // Placeholder: Call smart contract or DEX API
+  console.log(`Executing trade: ${JSON.stringify(action)}`);
+  return { txHash: '0xmockhash' };
+}
+
+async function stakeTokens(userId, amount) {
+  // Placeholder: Interact with staking contract
+  console.log(`Staking ${amount} ZAI for ${userId}`);
+  return { txHash: '0xmockhash' };
+}
+
+app.post('/api/chat', async (req, res) => {
+  const { userId, message } = req.body;
+  const context = userContext[userId] || {};
+  
+  try {
+    const aiResponse = await processCommand(message, context);
+    const parsedResponse = JSON.parse(aiResponse);
+
+    // Execute actions based on intent
+    const results = [];
+    for (const action of parsedResponse.actions) {
+      if (action.type === 'trade') {
+        const result = await executeTrade(action);
+        results.push(result);
+      } else if (action.type === 'stake') {
+        const result = await stakeTokens(userId, action.amount);
+        results.push(result);
+      }
+    }
+
+    res.json({ reply: parsedResponse.reply, results });
+  } catch (error) {
+    res.status(500).json({ error: 'Failed to process command' });
+  }
+});
+
+app.listen(5000, () => console.log('Server running on port 5000'));
+2. Frontend with Bubble UI and Chat
+This integrates the bubble wallet UI with a chat interface for talking to the AI agent.
+frontend/src/App.js
+javascript
+import React, { useState } from 'react';
+import BubbleWeb from './components/BubbleWeb';
+import ChatBox from './components/ChatBox';
+import './App.css';
+
+const initialAssets = [
+  { name: 'ZAI', value: 100, color: 'blue' },
+  { name: 'ETH', value: 2, color: 'silver' },
+];
+
+function App() {
+  const [assets, setAssets] = useState(initialAssets);
+  const [chatReply, setChatReply] = useState('');
+
+  const handleCommand = async (message) => {
+    const response = await fetch('/api/chat', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ userId: 'user1', message }),
+    }).then(res => res.json());
+    
+    setChatReply(response.reply);
+    // Update assets based on results (mock for now)
+    if (response.results.length) {
+      setAssets(prev => prev.map(a => ({ ...a }))); // Trigger re-render
+    }
+  };
+
+  return (
+    <div className="App">
+      <h1>ZAI World Wallet</h1>
+      <BubbleWeb assets={assets} />
+      <ChatBox onCommand={handleCommand} />
+      {chatReply && <p>AI: {chatReply}</p>}
+    </div>
+  );
+}
+
+export default App;
+frontend/src/components/BubbleWeb.js
+javascript
+import React from 'react';
+import { Stage, Layer, Circle } from 'react-konva';
+
+const BubbleWeb = ({ assets }) => {
+  const centerX = 400;
+  const centerY = 400;
+
+  return (
+    <Stage width={800} height={800}>
+      <Layer>
+        {assets.map((asset, index) => {
+          const angle = (index / assets.length) * 2 * Math.PI;
+          const x = centerX + 200 * Math.cos(angle);
+          const y = centerY + 200 * Math.sin(angle);
+          const size = asset.value / 10;
+          return <Circle key={index} x={x} y={y} radius={size} fill={asset.color} />;
+        })}
+        {/* Central Avatar */}
+        <Circle x={centerX} y={centerY} radius={50} fill="purple" />
+      </Layer>
+    </Stage>
+  );
+};
+
+export default BubbleWeb;
+frontend/src/components/ChatBox.js
+javascript
+import React, { useState } from 'react';
+
+const ChatBox = ({ onCommand }) => {
+  const [message, setMessage] = useState('');
+
+  const sendMessage = () => {
+    onCommand(message);
+    setMessage('');
+  };
+
+  return (
+    <div>
+      <input
+        value={message}
+        onChange={(e) => setMessage(e.target.value)}
+        placeholder="Talk to your ZAI agent..."
+      />
+      <button onClick={sendMessage}>Send</button>
+    </div>
+  );
+};
+
+export default ChatBox;
+frontend/src/App.css
+css
+.App {
+  text-align: center;
+  font-family: Arial, sans-serif;
+}
+3. ZAI Token and Staking Contracts
+These contracts manage the ZAI token and staking, integrated with the AI agent’s actions.
+contracts/ZAIToken.sol
+solidity
+// SPDX-License-Identifier: MIT
+pragma solidity ^0.8.0;
+
+import "@openzeppelin/contracts/token/ERC20/ERC20.sol";
+import "@openzeppelin/contracts/access/AccessControl.sol";
+
+contract ZAIToken is ERC20, AccessControl {
+  bytes32 public constant MINTER_ROLE = keccak256("MINTER_ROLE");
+  uint256 public constant INITIAL_SUPPLY = 20_000_000 * 10**18;
+
+  constructor() ERC20("ZAI Token", "ZAI") {
+    _mint(msg.sender, INITIAL_SUPPLY);
+    _setupRole(DEFAULT_ADMIN_ROLE, msg.sender);
+    _setupRole(MINTER_ROLE, msg.sender);
+  }
+
+  function mint(address to, uint256 amount) public {
+    require(hasRole(MINTER_ROLE, msg.sender), "Caller is not a minter");
+    _mint(to, amount);
+  }
+}
+contracts/ZAIStaking.sol
+solidity
+// SPDX-License-Identifier: MIT
+pragma solidity ^0.8.0;
+
+import "@openzeppelin/contracts/token/ERC20/IERC20.sol";
+
+contract ZAIStaking {
+  IERC20 public zaiToken;
+  mapping(address => uint256) public staked;
+
+  constructor(address _zaiToken) {
+    zaiToken = IERC20(_zaiToken);
+  }
+
+  function stake(uint256 amount) external {
+    zaiToken.transferFrom(msg.sender, address(this), amount);
+    staked[msg.sender] += amount;
+  }
+
+  function withdraw(uint256 amount) external {
+    require(staked[msg.sender] >= amount, "Insufficient stake");
+    staked[msg.sender] -= amount;
+    zaiToken.transfer(msg.sender, amount);
+  }
+}
+How It Works
+User Interaction  
+User opens the app, sees the bubble web with their ZAI and other assets.
+They type into the chat: "Ride some volatile markets and cash out on the highs, buying on the lows."
+The frontend sends this to the backend /api/chat.
+AI Processing  
+DeepSeek interprets the intent as volatility trading.
+Response might be:
+json
+{
+  "intent": "volatility_trading",
+  "actions": [
+    { "type": "trade", "from": "ZAI", "to": "ETH", "amount": 10, "condition": "buy_low" },
+    { "type": "trade", "from": "ETH", "to": "ZAI", "amount": 0.05, "condition": "sell_high" }
+  ],
+  "reply": "Got it! I’ll watch the markets and buy ZAI low, then sell high. Here’s the plan..."
+}
+The backend executes these trades via a DEX or market API.
+Another Example  
+User says: "I have some money, invest in good long-term ICO drops."
+DeepSeek might return:
+json
+{
+  "intent": "ico_investment",
+  "actions": [
+    { "type": "swap", "from": "ZAI", "to": "ICO_TOKEN_X", "amount": 50 }
+  ],
+  "reply": "Found a promising ICO! I’ll swap 50 ZAI for ICO_TOKEN_X. Confirm?"
+}
+TikTok Integration  
+The social login from earlier (Onboarding.js) can be styled for TikTok, using their OAuth API for a seamless "Login with TikTok" flow.
+Setup Instructions (README.md)
+markdown
+# ZAI World Wallet
+
+A next-gen wallet with a bubble UI and DeepSeek-powered AI agent.
+
+## Setup
+
+1. **Backend**:
+   - `cd backend`
+   - `npm install express axios dotenv ethers`
+   - Add `.env` with `DEEPSEEK_API_KEY`, `INFURA_KEY`, `PRIVATE_KEY`
+   - `node server.js`
+
+2. **Frontend**:
+   - `cd frontend`
+   - `npm install react react-konva axios`
+   - `npm start`
+
+3. **Contracts**:
+   - Deploy `ZAIToken.sol` and `ZAIStaking.sol` using Hardhat/Truffle.
+   - Update `server.js` with contract addresses.
+
+## Usage
+
+- Chat with the AI: "Ride volatile markets" or "Invest in ICOs."
+- Watch the bubble web update with your actions.
+
+## Notes
+
+- Designed for DeepSeek; adjust prompts if using another AI.
+- TikTok login can be added via OAuth in `Onboarding.js`.
+Why This Fits
+AI Agent: DeepSeek powers natural language commands, making it feel like a conversation (like we’re doing now!).
+User Requests: Handles volatility trading and ICO investing as you asked, with room for more strategies.
+ZAI Focus: Built around ZAI tokens, enhancing their utility within the wallet.
+TikTok Vision: Social login aligns with a TikTok-integrated wallet goal.
